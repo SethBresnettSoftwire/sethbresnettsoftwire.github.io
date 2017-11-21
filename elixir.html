@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; font-size: 25px }
+      .remark-slide-content { font-size: 25px}
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Elixir
+
+---
+
+# What is Elixir?
+
+* Functional
+* Dynamic typing
+* Ruby-like syntax
+* Built on top of Erlang
+
+???
+
+*Functional - ie immutable data structures, first class functions.
+*Typing and syntax mean it's fairly lightweight.
+*Similar to Scala and Java
+
+---
+
+# What is Erlang?
+
+* Built in the 90s for telecommunications
+* Focused on lightweight processes passing messages
+* High reliability
+* But a bit old-fashioned
+
+???
+
+* Built by Ericsson
+* Runs on a VM - like Java
+* Similar philosophy to akka
+* Philosophy based around supervision trees, hot patching, very reliable
+* Some syntax, standard library a bit weird
+
+---
+
+# Enter Elixir
+
+* Created in 2011
+* Syntax
+* Tooling
+* Polymorphism, macros
+
+---
+
+# Why use it?
+
+* Concurrency, reliability
+* Horizontal scaling
+* Web server, message bus etc
+
+???
+
+* Not best choice for number-crunching etc
+* Scale horizontally with lots of small processes
+
+---
+
+class: center, middle
+
+# Code sample time!
+
+---
+
+# Functions
+
+```elixir
+defmodule MyList do
+  def len([]), do: 0
+  def len([head|tail]), do 1 + len(tail)
+end
+```
+
+???
+
+* We're using pattern matching, but multiple definitions rather than top-level match
+* Quite nice because it reduces nesting
+
+---
+
+# Pipe operator
+
+```elixir
+people = DB.find_customers
+orders = Orders.for_customers(people)
+tax = sales_tax(orders, 2016)
+filing = prepare_filing(tax)
+```
+
+```elixir
+filing = DB.find_customers
+          |> Orders.for_customers
+          |> sales_tax(2016)
+          |> prepare_filing
+```
+
+???
+
+* This fits in well with the functional idiom of functions operating on data
+
+---
+
+# Maps and pattern matching
+
+```elixir
+defmodule Barrier do
+  car = %{ name: "Land Rover", height: 1.72 }
+  person = %{ name: "Shaquille", height: 2.16 }
+
+  def check_height(%{ height: height, name: name }) do
+    IO.puts "Checking height for #{name}"
+    height <= 1.9
+  end
+
+  def check_height(other) do
+   # Handle missing attributes here
+  end
+end
+```
+
+???
+
+* Maps like ruby hashes
+* Allowing you to cut out a lot of ifs
+* Generally lots of nice functionality around pattern matching
+* Means it's easy to write functions which inspect the input then do something based on it
+
+---
+
+# Binaries
+
+```elixir
+b = << 1, 2, 4 >> # = 01 02 04 (hex)
+b = << 1::size(2), 1::size(3) >> # = 01 001 (binary)
+
+def process(<< length::unsigned-integer-size(8), 
+               flags::bitstring-size(4), 
+               data::binary >>) do
+ options = read_flags(flags)
+ process_data(data, options)
+end
+```
+
+???
+
+* Very useful for handling custom message protocols etc - cuts out a lot of boilerplate code
+* Again shows that pattern matching is central to how things work
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
